@@ -1,0 +1,26 @@
+[Unit]
+Description=Breakout Box reverse VPN service (server)
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+
+ExecStart=/sbin/ip link add {{ wg_if }} type wireguard
+ExecStart=/usr/bin/wg setconf {{ wg_if }} {{ config_dir }}/{{ wg_if}}.conf
+ExecStart=/sbin/ip -4 address add {{ wireguard_server_ipv4 }} dev {{ wg_if }}
+ExecStart=/sbin/ip link set mtu 1420 up dev {{ wg_if }}
+ExecStart=/sbin/ip -4 route add default dev {{ wg_if }} table {{ wireguard_server_route_table }}
+ExecStart=/sbin/ip -4 rule add from {{ wireguard_subnet_ipv4 }} table {{ wireguard_server_route_table }}
+ExecStart=/sbin/ip -4 rule add table main suppress_prefixlength 0
+ExecStart=-/sbin/iptables -I FORWARD -i {{ wg_if }} ! -o {{ wg_if }} -j REJECT
+ExecStart=/sbin/sysctl -w net.ipv4.conf.{{ wg_if }}.forwarding=1
+ExecStart=/sbin/sysctl -w net.ipv4.conf.{{ inet_if }}.forwarding=1
+
+ExecStopPost=/sbin/sysctl -w net.ipv4.conf.{{ wg_if }}.forwarding=0
+ExecStopPost=/sbin/sysctl -w net.ipv4.conf.{{ inet_if }}.forwarding=0
+ExecStopPost=/sbin/ip -4 route del default dev {{ wg_if }} table {{ wireguard_server_route_table }}
+ExecStopPost=/sbin/ip -4 rule del from {{ wireguard_subnet_ipv4 }} table {{ wireguard_server_route_table }}
+ExecStopPost=/sbin/ip -4 rule del table main suppress_prefixlength 0
+ExecStopPost=-/sbin/iptables -D FORWARD -i {{ wg_if }} ! -o {{ wg_if }} -j REJECT
+ExecStopPost=/sbin/ip link delete dev {{ wg_if }}

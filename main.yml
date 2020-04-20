@@ -1,0 +1,15 @@
+---
+- hosts: box
+  vars_files:
+  - wireguard-vars.yml
+  - secrets.yml
+  - overrides.yml
+  roles:
+  - box
+- hosts: server
+  vars_files:
+  - wireguard-vars.yml
+  - secrets.yml
+  - overrides.yml
+  roles:
+  - server

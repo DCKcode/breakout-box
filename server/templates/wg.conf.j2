@@ -1,0 +1,14 @@
+[Interface]
+PrivateKey = {{ server_wg_private_key }}
+ListenPort = {{ wireguard_server_listen_port }}
+
+[Peer]
+PublicKey = {{ box_wg_public_key }}
+AllowedIPs = 0.0.0.0/0, ::/0
+
+{% for client in clients %}
+[Peer]
+# {{ client.comment }}
+PublicKey = {{ client.public_key }}
+AllowedIPs = {{ client.allowed_ips | join(", ") }}
+{% endfor %}

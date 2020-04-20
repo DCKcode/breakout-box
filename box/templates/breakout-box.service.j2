@@ -1,0 +1,24 @@
+[Unit]
+Description=Breakout Box reverse VPN service (box)
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+
+ExecStart=/sbin/ip link add {{ wg_if }} type wireguard
+ExecStart=/usr/bin/wg setconf {{ wg_if }} {{ config_dir }}/{{ wg_if }}.conf
+ExecStart=/sbin/ip -4 address add {{ wireguard_box_ipv4 }} dev {{ wg_if }}
+ExecStart=/sbin/ip link set mtu 1420 up dev {{ wg_if }}
+ExecStart=/sbin/iptables -A FORWARD -i {{ wg_if }} -o {{ inet_if }} -j ACCEPT
+ExecStart=/sbin/iptables -A FORWARD -i {{ inet_if }} -o {{ wg_if }} -m state --state ESTABLISHED,RELATED -j ACCEPT
+ExecStart=/sbin/iptables -t nat -A POSTROUTING -o {{ inet_if }} -j MASQUERADE
+ExecStart=/sbin/sysctl -w net.ipv4.conf.{{ wg_if }}.forwarding=1
+ExecStart=/sbin/sysctl -w net.ipv4.conf.{{ inet_if }}.forwarding=1
+
+ExecStopPost=-/sbin/sysctl -w net.ipv4.conf.{{ wg_if }}.forwarding=0
+ExecStopPost=-/sbin/sysctl -w net.ipv4.conf.{{ inet_if }}.forwarding=0
+ExecStopPost=-/sbin/iptables -D FORWARD -i {{ wg_if }} -o {{ inet_if }} -j ACCEPT
+ExecStopPost=-/sbin/iptables -D FORWARD -i {{ inet_if }} -o {{ wg_if }} -m state --state ESTABLISHED,RELATED -j ACCEPT
+ExecStopPost=-/sbin/iptables -t nat -D POSTROUTING -o {{ inet_if }} -j MASQUERADE
+ExecStopPost=/sbin/ip link delete dev {{ wg_if }}

@@ -1,0 +1,44 @@
+---
+
+- name: Check if Wireguard kernel module is loaded
+  modprobe:
+    name: wireguard
+    state: present
+
+- name: Check if wg command exists
+  command: wg
+  changed_when: False
+
+- name: Ensure systemd directory exists
+  file:
+    path: "{{ systemd_dir }}"
+    state: directory
+    owner: root
+
+- name: Ensure config directory exists
+  file:
+    path: "{{ config_dir }}"
+    state: directory
+    owner: root
+  
+- name: Install Wireguard configuration
+  template:
+    src: wg.conf.j2
+    dest: "{{ config_dir }}/{{ wg_if }}.conf"
+    owner: root
+    mode: o=rw
+  register: config_copy
+
+- name: Install Breakout Box service
+  template:
+    src: breakout-box.service.j2
+    dest: "{{ systemd_dir }}/breakout-box.service"
+    owner: root
+  register: service_copy
+
+- name: Activate Breakout Box service
+  systemd:
+    name: breakout-box.service
+    state: "{{ 'restarted' if config_copy.changed or service_copy.changed else 'started' }}"
+    daemon-reload: "{{ service_copy.changed }}"
+    enabled: yes

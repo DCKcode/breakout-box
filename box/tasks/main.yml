@@ -1,0 +1,3 @@
+---
+
+- import_tasks: ../wireguard-tasks.yml

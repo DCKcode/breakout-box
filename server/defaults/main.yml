@@ -1,0 +1,9 @@
+---
+systemd_dir: /etc/systemd/system
+config_dir: /etc/wireguard
+
+# Default selections for interface names
+wg_if: wg0
+inet_if: "{{ ansible_default_ipv4.interface }}"
+
+clients:
