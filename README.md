@@ -23,8 +23,8 @@ You should not put Breakout Boxes on networks where you don't have permission to
 ## Requirements
 You need:
 
-1. A box to put in a network. This can be a Raspberry Pi, laptop of virtual machine running Linux. It must have Wireguard installed and use SystemD.
-2. A public server, like a VPS running Linux. It must have Wireguard installed and use SystemD. You must be able to SSH to it, and the UDP port on which you have Wireguard running (default: 51280) must be accessible by your box and clients.
+1. A box to put in a network. This can be a Raspberry Pi, laptop of virtual machine running Linux. It must have Wireguard installed and use systemd.
+2. A public server, like a VPS running Linux. It must have Wireguard installed and use systemd. You must be able to SSH to it, and the UDP port on which you have Wireguard running (default: 51280) must be accessible by your box and clients.
 3. A computer from which you do the installation. We use Ansible for the installation, so you must [install Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html). For most setups, including the example below, you also need [to have Wireguard installed locally](https://www.wireguard.com/install/).
 
 ## Set up a Breakout Box
