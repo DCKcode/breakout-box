@@ -5,4 +5,4 @@ PrivateKey = {{ box_wg_private_key }}
 Endpoint = {{ hostvars['server'].ansible_host }}:{{ wireguard_server_listen_port }}
 PersistentKeepalive = {{ wireguard_box_keepalive }}
 PublicKey = {{ server_wg_public_key }}
-AllowedIPs = {{ wireguard_subnet_ipv4 }}
+AllowedIPs = {{ wireguard_subnet_ipv4 + (', ' + wireguard_subnet_ipv6 if wireguard_use_ipv6 else '') }}

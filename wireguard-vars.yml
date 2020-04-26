@@ -1,4 +1,5 @@
 ---
+wireguard_use_ipv6: yes
 
 wireguard_server_listen_port: 51820
 wireguard_server_route_table: 51820
@@ -6,5 +7,9 @@ wireguard_server_route_table: 51820
 wireguard_subnet_ipv4: "172.16.22.0/24"
 wireguard_server_ipv4: "{{ wireguard_subnet_ipv4 | ipaddr(1) }}"
 wireguard_box_ipv4: "{{ wireguard_subnet_ipv4 | ipaddr(2) }}"
+
+wireguard_subnet_ipv6: "fd85:492b:1971:cd7d::/64"
+wireguard_server_ipv6: "{{ wireguard_subnet_ipv6 | ipaddr(1) }}"
+wireguard_box_ipv6: "{{ wireguard_subnet_ipv6 | ipaddr(2) }}"
 
 wireguard_box_keepalive: 30

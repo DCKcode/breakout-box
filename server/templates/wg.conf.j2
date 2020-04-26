@@ -4,7 +4,7 @@ ListenPort = {{ wireguard_server_listen_port }}
 
 [Peer]
 PublicKey = {{ box_wg_public_key }}
-AllowedIPs = 0.0.0.0/0
+AllowedIPs = {{ '0.0.0.0/0' + (', ::/0' if wireguard_use_ipv6 else '') }}
 
 {% for client in clients %}
 [Peer]
