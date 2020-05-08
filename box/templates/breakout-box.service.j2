@@ -1,6 +1,8 @@
 [Unit]
 Description=Breakout Box reverse VPN service (box)
-After=network.target
+
+[Install]
+WantedBy=network-online.target
 
 [Service]
 Type=oneshot
