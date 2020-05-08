@@ -1,6 +1,4 @@
 ---
-wireguard_use_ipv6: yes
-
 wireguard_server_listen_port: 51820
 wireguard_server_route_table: 51820
 

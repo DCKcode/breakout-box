@@ -6,4 +6,6 @@ config_dir: /etc/wireguard
 wg_if: wg0
 inet_if: "{{ ansible_default_ipv4.interface }}"
 
+wireguard_use_ipv6: yes
+
 clients:
