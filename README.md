@@ -81,6 +81,22 @@ clients:
 
 After you've successfully tested this, you can place your Breakout Box anywhere to route your traffic through it. If you want to add or remove clients later, you can update update `overrides.yml` and only update your server with `ansible-playbook --limit server --ask-vault-pass -i hosts.yml main.yml`. Your box doesn't have to be there to add clients!
 
+## Example client configuration
+
+No special Wireguard configuration is necessary - it's as if you're connecting to the server's Wireguard. An example is below - don't forget to note your target network's DNS.
+
+```
+[Interface]
+PrivateKey = KPZx5yQ8w1bEvouIDRUJR1s0yJjrGVKOVOzq9+lgMm4=
+Address = 172.16.22.42/32
+DNS = 192.168.1.1
+
+[Peer]
+PublicKey = wpTH7DD6OnhM5PK0oMomD9CoHgGPRB+KG2GfrRaug04=
+AllowedIPs = 0.0.0.0/0, ::/0
+Endpoint = 48.24.48.12:51820
+```
+
 ## I don't want to use Ansible!
 We're using Ansible here only for convenience, because it makes setting up multiple systems easy. But you can set it up manually as well. The "magic" behind a Breakout Box is contained in only four files:
 
