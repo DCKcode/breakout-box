@@ -9,8 +9,6 @@ A Breakout Box is a box you put on a network. The box connects to a publicly ava
 
 So it's a VPN, but the reverse. Instead of you connecting to a VPN box, the VPN box connects to you. No ports to open, and keep your home network private from outside eyes. A reverse VPN - or a Breakout Box!
 
-
-
 ## What should I use this for?
 There are many use cases for which a Breakout Box is a great tool.
 
@@ -25,7 +23,7 @@ You need:
 
 1. A box to put in a network. This can be a Raspberry Pi, laptop of virtual machine running Linux. It must have Wireguard installed and use systemd.
 2. A public server, like a VPS running Linux. It must have Wireguard installed and use systemd. You must be able to SSH to it, and the UDP port on which you have Wireguard running (default: 51280) must be accessible by your box and clients.
-3. A computer from which you do the installation. We use Ansible for the installation, so you must [install Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html). For most setups, including the example below, you also need [to have Wireguard installed locally](https://www.wireguard.com/install/).
+3. A computer from which you do the installation. We use Ansible for the installation, so you must [install Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html). For most setups, including the example below, you also need [to have Wireguard installed locally](https://www.wireguard.com/install/). You also need the Python `netaddr` library installed - on many distros this is the `python3-netaddr` package.
 
 ## Set up a Breakout Box
 In this example, the server's IP address is `48.24.48.12` and the box's IP address is `192.168.1.25`.
@@ -101,6 +99,6 @@ Endpoint = 48.24.48.12:51820
 We're using Ansible here only for convenience, because it makes setting up multiple systems easy. But you can set it up manually as well. The "magic" behind a Breakout Box is contained in only four files:
 
 * The server's [Wireguard configuration](server/templates/wg.conf.j2) which routes all network through the box's incoming connection.
-* The server's [breakout systemd service](server/../box/templates/breakout-box.service.j2) which sets up the Wireguard interface, and sets up a separate routing table for the Wireguard traffic.
+* The server's [breakout systemd service](box/templates/breakout-box.service.j2) which sets up the Wireguard interface, and sets up a separate routing table for the Wireguard traffic.
 * The box's [Wireguard configuration](box/templates/wg.conf.j2) 
 * The box's [breakout-box systemd service](box/templates/breakout-box.service.j2) which NATs all traffic coming in to the Wireguard interface to its outgoing network.
